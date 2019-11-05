@@ -4,7 +4,10 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Bscheduler Api"
+  config.site_title = "Break Scheduler API"
+  config.comments = false
+  config.comments_menu = false
+  config.comments_registration_name = 'AdminComment'
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
