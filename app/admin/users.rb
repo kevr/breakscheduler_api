@@ -1,6 +1,18 @@
 ActiveAdmin.register User do
   permit_params :name, :email, :password, :password_confirmation
 
+  index do
+    selectable_column
+    id_column
+    column :name
+    column :email
+    column :updated_at
+  end
+
+  filter :name
+  filter :email
+  filter :created_at
+
   form title: "Create New User" do |f|
     inputs 'Details' do
       input :name
