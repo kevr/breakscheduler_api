@@ -11,7 +11,4 @@ Rails.application.routes.draw do
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-
-  get '/', to: 'misc#not_found'
-  get '*path', to: 'misc#not_found'
 end
