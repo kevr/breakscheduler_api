@@ -6,12 +6,11 @@ ActiveAdmin.register User do
     id_column
     column :name
     column :email
-    column :updated_at
+    actions
   end
 
   filter :name
   filter :email
-  filter :created_at
 
   form title: "Create New User" do |f|
     inputs 'Details' do
