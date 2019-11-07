@@ -19,10 +19,6 @@ class UsersController < ApplicationController
         # of the exception message in this rescue
         error: e.message.gsub('Validation failed: ', '')
       }, status: :bad_request
-    rescue Exception => e
-      render json: {
-        error: e.message
-      }, status: :bad_request
     end
   end
 

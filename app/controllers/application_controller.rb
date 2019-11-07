@@ -2,18 +2,14 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def json_authenticated
-    if not _json_authenticated
-      render json: {
-        error: "A valid user session is required"
-      }, status: :unauthorized
-    end
+    _json_authenticated
   rescue ActiveRecord::RecordNotFound => e
     render json: {
-      error: e.message
+      error: "Invalid authorization token"
     }, status: :unauthorized
   rescue JWT::DecodeError => e
     render json: {
-      error: e.message
+      error: "Invalid authorization token"
     }, status: :unauthorized
   end
 
@@ -33,6 +29,9 @@ class ApplicationController < ActionController::Base
     header = request.headers['Authorization']
     header = header.split(' ').last if header
     @decoded = JsonWebToken.decode(header)
-    @current_user = User.find(@decoded[:user_id]) if @decoded
+    if not @decoded
+      raise JWT::DecodeError.new "Unable to decode header"
+    end
+    @current_user = User.find(@decoded[:user_id])
   end
 end

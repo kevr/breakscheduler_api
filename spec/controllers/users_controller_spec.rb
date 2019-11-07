@@ -48,6 +48,22 @@ RSpec.describe UsersController, type: :controller do
       expect(data['error']).to eq "Password is too short (minimum is 6 characters)"
     end
 
+    it 'invalid password produces 401' do
+      post :login, params: {
+        email: "test@example.org",
+        password: "blahblah"
+      }
+      expect(response.code).to eq '401'
+    end
+
+    it 'invalid email produces 404' do
+      post :login, params: {
+        email: "blah@blah.com",
+        password: "blahblah"
+      }
+      expect(response.code).to eq '404'
+    end
+
     it 'obtain an authentication token' do
       post :login, params: {
         email: "test@example.org",
@@ -117,5 +133,17 @@ RSpec.describe UsersController, type: :controller do
       expect(response.code).to eq '401'
     end
 
+    it 'trying to authorize as deleted user raises RecordNotFound' do
+      token = JsonWebToken.encode(user_id: @user.id)
+      headers = {
+        'Authorization' => "Token #{token}"
+      }
+      request.headers.merge! headers
+      
+      @user.delete
+      get :info
+      expect(response.code).to eq '401'
+    end
+  
   end
 end
