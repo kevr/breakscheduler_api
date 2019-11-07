@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   # endpoints; users should only be communicating
   # with rails via json api communication
   # devise_for :users
+  post '/users/new', to: 'users#new'
+  post '/users/login', to: 'users#login'
+  get '/users/me', to: 'users#info'
 
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
