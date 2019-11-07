@@ -6,6 +6,7 @@ RSpec.describe MembersController, type: :controller do
     before do
       @member = Member.create!({
         name: "Some Member",
+        title: "Ingenious Member",
         email: "some@member.com",
         summary: "An extraordinary member."
       })

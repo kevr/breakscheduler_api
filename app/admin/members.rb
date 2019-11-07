@@ -5,7 +5,7 @@ ActiveAdmin.register Member do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  permit_params :name, :email, :summary, :avatar
+  permit_params :name, :email, :title, :summary, :avatar
   #
   # or
   #
@@ -18,6 +18,7 @@ ActiveAdmin.register Member do
     selectable_column
     id_column
     column :name
+    column :title
     column :email
     column :avatar do |av|
       image_tag url_for(av.avatar)
@@ -27,10 +28,12 @@ ActiveAdmin.register Member do
 
   filter :name
   filter :email
+  filter :title
 
   form title: "Create New Member" do |f|
     inputs 'Details' do
       input :name
+      input :title
       input :email
       input :summary
       input :avatar, as: :file

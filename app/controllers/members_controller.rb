@@ -7,6 +7,7 @@ class MembersController < ApplicationController
       output.push({
         id: member.id,
         name: member.name,
+        title: member.title,
         email: member.email,
         summary: member.summary,
         avatar: member.avatar.attached? ? rails_blob_url(member.avatar) : nil
@@ -20,6 +21,7 @@ class MembersController < ApplicationController
     output = {
       id: @member.id,
       name: @member.name,
+      title: @member.title,
       email: @member.email,
       summary: @member.summary,
       avatar: @member.avatar.attached? ? rails_blob_url(@member.avatar) : nil
