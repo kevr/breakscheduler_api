@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   post '/users/login', to: 'users#login'
   get '/users/me', to: 'users#info'
 
+  get '/members', to: 'members#index'
+  get '/members/:member_id', to: 'members#show'
+
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
