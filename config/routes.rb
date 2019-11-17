@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   get '/members', to: 'members#index'
   get '/members/:member_id', to: 'members#show'
 
+  get '/topics', to: 'topics#index'
+  get '/topics/:topic_id', to: 'topics#show'
+  post '/topics', to: 'topics#search'
+
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
