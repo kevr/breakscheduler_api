@@ -20,7 +20,7 @@ Now you can access elevated endpoints by providing the `Authorization` HTTP head
 
 ## API Endpoints
 
-#### /users/new
+#### POST /users/new
 
 Register a new user.
 
@@ -28,7 +28,7 @@ Parameters required: `name`, `email`, `password`, `password_confirmation`
 
 Returns: JSON encoding of the new user object
 
-#### /users/login
+#### POST /users/login
 
 Authenticate as an existing user. This endpoint replies with a JSON object containing a token that can be used for authorization to elevated API endpoints, like `/users/me`.
 
@@ -38,11 +38,74 @@ Returns: JSON object containing a JSON web token that can be used for authorizat
 
     {"token": "your_authorization_token"}
 
-#### /users/me (Authorized)
+#### GET /users/me (Authorized)
 
 Returns: JSON encoding of the user object associated with your authorization token.
 
     {"id": 1, "email": "some@email.com", name: "Some Person", reset_password_token: null}
+
+#### GET /articles
+
+Returns: JSON encoded list of all guide articles.
+
+    [
+        {
+            "id": 1,
+            "title": "Article Title",
+            "body": "Article's body content."
+        }
+    ]
+
+#### GET /articles/:article_id
+
+Returns: JSON encoded object representing article which has id :article_id.
+
+    {
+        "id": 1,
+        "title": "Some Article",
+        "body": "Some article content."
+    }
+
+#### GET /topics
+
+Returns: JSON encoded list of all searchable help topics.
+
+    [
+        {
+            "id": 1,
+            "subject": "A Topic Subject",
+            "body": "A topic's content"
+        }
+    ]
+
+#### GET /topics/:topic_id
+
+Returns: JSON encoded object of a topic with id :topic_id.
+
+    {
+        "id": 1,
+        "subject": "First subject",
+        "body": "First body!"
+    }
+
+#### POST /topics
+
+Parameters required: `terms`
+
+Returns: JSON encoded list of search results matched by `terms`.
+
+    [
+        {
+            "id": 1,
+            "subject": "First subject",
+            "body": "First body"
+        },
+        [
+            "id": 2,
+            "subject": "Second subject",
+            "body": "Second body"
+        ]
+    ]
 
 ## Database Administration
 
