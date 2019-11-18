@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # User login action. This action 
+  # API User Login
   def login
     begin
       @user = User.find_by_email!(params[:email])
@@ -43,11 +43,30 @@ class UsersController < ApplicationController
     end
   end
 
+  # API Administrator Login
+  def admin_login
+    begin
+      @user = AdminUser.find_by_email!(params[:email])
+      if @user.valid_password?(params[:password])
+        token = JsonWebToken.encode(admin_id: @user.id)
+        render json: {
+          token: token
+        }, status: :ok
+      else
+        render json: {
+          error: "Invalid credentials"
+        }, status: :unauthorized
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {
+        error: e.message
+      }, status: :not_found
+    end
+  end
+
   # /users/me
   def info
-    render json: @current_user, only: [
-      :id, :name, :email, :reset_password_token
-    ]
+    render json: @current_user
   end
 
 end

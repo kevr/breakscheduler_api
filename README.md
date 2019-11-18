@@ -40,9 +40,11 @@ Returns: JSON object containing a JSON web token that can be used for authorizat
 
 #### GET /users/me (Authorized)
 
+Caveat: the "name" field may be null if the user is an administrator. The "type" field can either be `user` or `admin`.
+
 Returns: JSON encoding of the user object associated with your authorization token.
 
-    {"id": 1, "email": "some@email.com", name: "Some Person", reset_password_token: null}
+    {"id": 1, "email": "some@email.com", "name": "Some Person", "reset_password_token": null, "type": "user"}
 
 #### GET /members
 

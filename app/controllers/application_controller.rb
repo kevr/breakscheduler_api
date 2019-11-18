@@ -40,6 +40,17 @@ class ApplicationController < ActionController::Base
     if not @decoded
       raise JWT::DecodeError.new "Unable to decode header"
     end
-    @current_user = User.find(@decoded[:user_id])
+
+    begin
+      @current_user = User.find(@decoded[:user_id])
+    rescue ActiveRecord::RecordNotFound => e
+      @current_user = nil
+    end
+
+    if @current_user == nil
+      @current_user = AdminUser.find(@decoded[:admin_id])
+    end
+
+    @current_user
   end
 end
