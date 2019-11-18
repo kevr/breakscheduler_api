@@ -8,10 +8,8 @@
 class Article < ApplicationRecord
   # Each article can have nested articles.
   # article = Article.create
-  # article.subarticles.create
-  # article.subarticles.find
-  has_many :articles, through: :subarticles
-
+  # article.articles.create
+  # article.articles.find
   validates :order, uniqueness: true
 
   def self.create(attributes = {}, &block)
@@ -26,5 +24,13 @@ class Article < ApplicationRecord
     new_order = articles.last ? articles.last.order + 1 : 1
     attributes[:order] = new_order
     super
+  end
+
+  def as_json(options = {})
+    {
+      :id => self.id,
+      :title => self.title,
+      :body => self.body
+    }
   end
 end
