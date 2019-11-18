@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   get '/topics/:topic_id', to: 'topics#show'
   post '/topics', to: 'topics#search'
 
+  get '/articles', to: 'articles#index'
+  get '/articles/:article_id', to: 'articles#show'
+
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
