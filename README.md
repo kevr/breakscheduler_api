@@ -44,6 +44,14 @@ Returns: JSON encoding of the user object associated with your authorization tok
 
     {"id": 1, "email": "some@email.com", name: "Some Person", reset_password_token: null}
 
+#### GET /members
+
+Returns: JSON encoded list of all members of the Break Scheduler team.
+
+#### GET /members/:member_id
+
+Returns: JSON encoded object of a member correlated to :member_id.
+
 #### GET /articles
 
 Returns: JSON encoded list of all guide articles.
