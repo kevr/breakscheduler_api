@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
-  # Standard users
-  # We provide our own rolled routes for user
-  # endpoints; users should only be communicating
-  # with rails via json api communication
-  # devise_for :users
+  post '/users/admin/login', to: 'users#admin_login'
+
   post '/users/new', to: 'users#new'
   post '/users/login', to: 'users#login'
   get '/users/me', to: 'users#info'
