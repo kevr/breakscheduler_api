@@ -3,20 +3,12 @@ class TopicsController < ApplicationController
 
   def index
     @topics ||= Topic.all
-    render json: @topics, only: [
-      :id,
-      :subject,
-      :body
-    ]
+    render json: @topics
   end
 
   def show
     @topic ||= Topic.find(params[:topic_id])
-    render json: @topic, only: [
-      :id,
-      :subject,
-      :body
-    ]
+    render json: @topic
   end
 
   def search

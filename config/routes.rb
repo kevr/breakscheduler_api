@@ -15,6 +15,15 @@ Rails.application.routes.draw do
   get '/articles', to: 'articles#index'
   get '/articles/:article_id', to: 'articles#show'
 
+  get '/tickets', to: 'tickets#index'
+  post '/tickets', to: 'tickets#create'
+  get '/tickets/:id', to: 'tickets#show'
+  patch '/tickets/:id', to: 'tickets#update'
+
+  post '/tickets/:id/replies', to: 'replies#create'
+  get '/tickets/:id/replies/:reply_id', to: 'replies#show'
+  patch '/tickets/:id/replies/:reply_id', to: 'replies#update'
+
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

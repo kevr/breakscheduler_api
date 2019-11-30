@@ -8,11 +8,11 @@ class User < ApplicationRecord
 
   def as_json(options = {})
     {
-      id: self.id,
-      name: self.name,
-      email: self.email,
-      reset_password_token: self.reset_password_token,
-      type: "user"
+      "id" => self.id,
+      "name" => self.name,
+      "email" => self.email,
+      "reset_password_token" => self.reset_password_token,
+      "type" => "user"
     }
   end
 end

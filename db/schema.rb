@@ -79,20 +79,24 @@ ActiveRecord::Schema.define(version: 2019_11_18_203256) do
 
   create_table "replies", force: :cascade do |t|
     t.integer "ticket_id"
+    t.string "user_type"
+    t.integer "user_id"
     t.text "body", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ticket_id"], name: "index_replies_on_ticket_id"
+    t.index ["user_type", "user_id"], name: "index_replies_on_user_type_and_user_id"
   end
 
   create_table "tickets", force: :cascade do |t|
+    t.string "user_type"
     t.integer "user_id"
     t.string "subject", null: false
     t.text "body", null: false
     t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_tickets_on_user_id"
+    t.index ["user_type", "user_id"], name: "index_tickets_on_user_type_and_user_id"
   end
 
   create_table "topics", force: :cascade do |t|

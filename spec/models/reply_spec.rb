@@ -12,7 +12,7 @@ RSpec.describe Reply, type: :model do
       })
 
       @ticket = Ticket.create!({
-        user_id: @user.id,
+        user: @user,
         subject: "Some Ticket",
         body: "Intro text!",
       })
@@ -20,14 +20,16 @@ RSpec.describe Reply, type: :model do
 
     it 'can be created' do
       @reply = Reply.create!({
-        ticket_id: @ticket.id,
+        user: @user,
+        ticket: @ticket,
         body: "A sweet reply!"
       })
     end
 
     it 'can be updated' do
       @reply = Reply.create!({
-        ticket_id: @ticket.id,
+        user: @user,
+        ticket: @ticket,
         body: "A sweet reply!"
       })
 
@@ -35,8 +37,9 @@ RSpec.describe Reply, type: :model do
     end
 
     it 'can be deleted via ticket being deleted' do
-      Reply.create!({
-        ticket_id: @ticket.id,
+      reply = Reply.create!({
+        user: @user,
+        ticket: @ticket,
         body: "A reply that should be deleted when it's ticket is."
       })
 
@@ -47,6 +50,22 @@ RSpec.describe Reply, type: :model do
       # to be destroyed since @ticket.destroy was called
       replies = Reply.where(ticket_id: ticket_id)
       expect(replies.length).to eq 0
+    end
+
+    it 'Reply as_json matches as expected' do 
+      reply = Reply.create!({
+        user: @user,
+        ticket: @ticket,
+        body: "A reply that should be deleted when it's ticket is."
+      })
+      
+      data = reply.as_json
+      expect(data["user"]).to eq @user.as_json
+      body = "A reply that should be deleted when it's ticket is."
+      expect(data["body"]).to eq body
+
+      replyFound = @ticket.replies.find(reply.id)
+      expect(replyFound.id).to eq reply.id
     end
 
   end
