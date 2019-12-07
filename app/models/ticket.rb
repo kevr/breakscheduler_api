@@ -14,7 +14,7 @@ class Ticket < ApplicationRecord
       "subject" => self.subject,
       "body" => self.body,
       "user" => self.user.as_json,
-      "replies" => self.replies.as_json,
+      "replies" => self.replies.order(:created_at).as_json,
       "status" => self.status,
       "updated_at" => self.updated_at
     }

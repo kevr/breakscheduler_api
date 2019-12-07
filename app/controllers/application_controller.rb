@@ -35,12 +35,14 @@ class ApplicationController < ActionController::Base
 
     begin
       @current_user = User.find(@decoded[:user_id])
+      @current_type = "user"
     rescue
       @current_user = nil
     end
 
     if @current_user == nil
       @current_user = AdminUser.find(@decoded[:admin_id])
+      @current_type = "admin"
     end
 
     @current_user

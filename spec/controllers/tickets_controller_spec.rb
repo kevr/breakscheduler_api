@@ -77,18 +77,49 @@ RSpec.describe TicketsController, type: :controller do
 
     end
 
-  it 'create a new ticket' do
-    headers = {
-      "Authorization" => "Token #{@token}"
-    }
-    request.headers.merge! headers
+    it 'create a new ticket' do
+      headers = {
+        "Authorization" => "Token #{@token}"
+      }
+      request.headers.merge! headers
 
-    post :create, params: {
-      subject: "A New Ticket",
-      body: "Man, oh man."
-    }
-    expect(response.code).to eq '200'
-  end
+      post :create, params: {
+        subject: "A New Ticket",
+        body: "Man, oh man."
+      }
+      expect(response.code).to eq '200'
+    end
+
+    it 'show/update a ticket as someone unauthorized returns 404' do
+      @otherUser = User.create!({
+        name: "Other User",
+        email: "other@user.com",
+        password: "abcd1234",
+        password_confirmation: "abcd1234"
+      })
+
+      @otherTicket = Ticket.create!({
+        user: @otherUser,
+        subject: "subject",
+        body: "body"
+      })
+
+      headers = {
+        "Authorization" => "Token #{@token}"
+      }
+      request.headers.merge! headers
+
+      get :show, params: {
+        id: @otherTicket.id
+      }
+      expect(response.code).to eq '404'
+
+      patch :update, params: {
+        id: @otherTicket.id,
+        body: "modified"
+      }
+      expect(response.code).to eq '404'
+    end 
 
   end
 end

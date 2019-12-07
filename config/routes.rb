@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   post '/tickets/:id/replies', to: 'replies#create'
   get '/tickets/:id/replies/:reply_id', to: 'replies#show'
   patch '/tickets/:id/replies/:reply_id', to: 'replies#update'
+  delete '/tickets/:id/replies/:reply_id', to: 'replies#destroy'
 
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
