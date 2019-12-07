@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kevr/breakscheduler_api.svg?branch=master)](https://travis-ci.org/kevr/breakscheduler_api)
+
 # breakscheduler_api
 
 This project contains source of a back-end API server that primarily stores persistent user data for the breakscheduler website front-end.
