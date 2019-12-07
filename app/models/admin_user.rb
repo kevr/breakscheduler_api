@@ -7,7 +7,7 @@ class AdminUser < ApplicationRecord
   def as_json(options = {})
     {
       id: self.id,
-      name: nil,
+      name: self.name,
       email: self.email,
       reset_password_token: self.reset_password_token,
       type: "admin"
