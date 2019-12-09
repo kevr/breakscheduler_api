@@ -201,7 +201,7 @@ RSpec.describe UsersController, type: :controller do
       data = ActiveSupport::JSON.decode(response.body)
       expected = {
         'id' => @admin.id,
-        'name' => nil,
+        'name' => '',
         'email' => @admin.email,
         'reset_password_token' => nil,
         'type' => 'admin'

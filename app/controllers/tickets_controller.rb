@@ -28,6 +28,9 @@ class TicketsController < ApplicationController
     if params[:body]
       @ticket.update(body: params[:body])
     end
+    if params[:status]
+      @ticket.update(status: params[:status])
+    end
     render json: @ticket
   end
 
