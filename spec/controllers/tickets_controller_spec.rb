@@ -66,7 +66,8 @@ RSpec.describe TicketsController, type: :controller do
       get :update, params: {
         id: @ticket.id,
         subject: "Updated Subject",
-        body: "Updated body."
+        body: "Updated body.",
+        status: "closed"
       }
       expect(response.code).to eq '200'
 
@@ -74,7 +75,7 @@ RSpec.describe TicketsController, type: :controller do
       expect(ticket["user"]).to eq @user.as_json
       expect(ticket["subject"]).to eq "Updated Subject"
       expect(ticket["body"]).to eq "Updated body."
-
+      expect(ticket["status"]).to eq "closed"
     end
 
     it 'create a new ticket' do
