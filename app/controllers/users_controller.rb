@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :json_not_authenticated, except: :info
-  before_action :json_authenticated, only: :info
+  before_action :json_not_authenticated, except: [ :info, :update ]
+  before_action :json_authenticated, only: [ :info, :update ]
 
   def new
     begin
@@ -66,6 +66,25 @@ class UsersController < ApplicationController
 
   # /users/me
   def info
+    render json: @current_user
+  end
+
+  def update
+    if params[:name]
+      @current_user.update!(name: params[:name])
+    end
+
+    if params[:email]
+      @current_user.update!(email: params[:email])
+    end
+
+    if params[:password] and params[:password_confirmation]
+      if params[:password] === params[:password_confirmation]
+        @current_user.password = params[:password]
+        @current_user.save!
+      end
+    end
+
     render json: @current_user
   end
 

@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   post '/users/new', to: 'users#new'
   post '/users/login', to: 'users#login'
+
+  patch '/users/me', to: 'users#update'
   get '/users/me', to: 'users#info'
 
   get '/members', to: 'members#index'

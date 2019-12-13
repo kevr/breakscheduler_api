@@ -209,5 +209,81 @@ RSpec.describe UsersController, type: :controller do
       expect(data).to eq expected
     end
 
+    it 'can update myself as a user' do
+      token = JsonWebToken.encode(user_id: @user.id)
+      headers = {
+        'Authorization' => "Token #{token}"
+      }
+      request.headers.merge! headers
+
+      patch :update, params: {
+        name: "Changed Name",
+        email: "changed@example.com"
+      }
+      expect(response.code).to eq '200'
+      
+      data = ActiveSupport::JSON.decode(response.body);
+      expect(data["name"]).to eq "Changed Name"
+      expect(data["email"]).to eq "changed@example.com"
+      expect(data["type"]).to eq "user"
+  
+      patch :update, params: {
+        password: "haha1234",
+        password_confirmation: "haha1234"
+      }
+      expect(response.code).to eq '200'
+
+      @user = User.find(@user.id)
+      expect(@user.email).to eq "changed@example.com"
+
+      # Kill Authorization header and login with the new email
+      # and password combination.
+      request.headers["Authorization"] = nil
+      post :login, params: {
+        email: @user.email,
+        password: "haha1234"
+      }
+      expect(response.code).to eq '200'
+    end
+
+    it 'can update own user details as admin' do
+      @admin = AdminUser.create!({
+        name: "Admin User",
+        email: "admin@example.com",
+        password: "abcd1234",
+        password_confirmation: "abcd1234"
+      })
+      token = JsonWebToken.encode(admin_id: @admin.id)
+      request.headers["Authorization"] = "Token #{token}"
+
+      patch :update, params: {
+        name: "Changed Name",
+        email: "changed@example.com"
+      }
+      expect(response.code).to eq '200'
+      
+      data = ActiveSupport::JSON.decode(response.body);
+      expect(data["name"]).to eq "Changed Name"
+      expect(data["email"]).to eq "changed@example.com"
+      expect(data["type"]).to eq "admin"
+  
+      patch :update, params: {
+        password: "haha1234",
+        password_confirmation: "haha1234"
+      }
+      expect(response.code).to eq '200'
+
+      @admin = AdminUser.find(@admin.id)
+      expect(@admin.email).to eq "changed@example.com"
+
+      # Kill Authorization header and login with the new email
+      # and password combination.
+      request.headers["Authorization"] = nil
+      post :admin_login, params: {
+        email: @admin.email,
+        password: "haha1234"
+      }
+      expect(response.code).to eq '200'
+    end
   end
 end
