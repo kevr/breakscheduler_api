@@ -1,3 +1,3 @@
 ActiveAdmin.register Article do
-  permit_params :title, :body, :order
+  permit_params :subject, :body, :order
 end

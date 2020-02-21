@@ -29,7 +29,7 @@ class Article < ApplicationRecord
   def as_json(options = {})
     {
       :id => self.id,
-      :title => self.title,
+      :subject => self.subject,
       :body => self.body
     }
   end
