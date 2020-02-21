@@ -1,5 +1,6 @@
 require 'simplecov'
 SimpleCov.start do
+  add_filter "app/admin/articles.rb"
   add_filter "app/admin/members.rb"
   add_filter "app/admin/users.rb"
   add_filter "app/admin/admin_users.rb"
