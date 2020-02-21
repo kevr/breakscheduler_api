@@ -5,7 +5,7 @@ RSpec.describe ArticlesController, type: :controller do
   context 'Article routes' do
     before do
       @article = Article.create!({
-        title: "First Article",
+        subject: "First Article",
         body: "Content for our first article!"
       })
     end
@@ -18,7 +18,7 @@ RSpec.describe ArticlesController, type: :controller do
       expect(data.length).to eq 1
 
       article = data[0]
-      expect(article['title']).to eq @article.title
+      expect(article['subject']).to eq @article.subject
       expect(article['body']).to eq @article.body
       expect(article['id']).to eq @article.id
       expect(@article.id).to eq 1
@@ -31,7 +31,7 @@ RSpec.describe ArticlesController, type: :controller do
       expect(response.code).to eq '200'
 
       article = ActiveSupport::JSON.decode(response.body)
-      expect(article['title']).to eq @article.title
+      expect(article['subject']).to eq @article.subject
       expect(article['body']).to eq @article.body
       expect(article['id']).to eq @article.id
       expect(@article.id).to eq 1
