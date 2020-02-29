@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   patch '/tickets/:id/replies/:reply_id', to: 'replies#update'
   delete '/tickets/:id/replies/:reply_id', to: 'replies#destroy'
 
+  post '/contact', to: 'contact#create'
+
   # Administrators who have access to /admin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

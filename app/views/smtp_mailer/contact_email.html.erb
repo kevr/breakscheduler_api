@@ -1,0 +1,13 @@
+<html>
+  <body>
+    <div>
+      <h6>Hello, <%= @user.name %>.</h6>
+      <p>A guest, <%= @message['email'] %> has sent a message, titled "<%= @message['subject'] %>".</p>
+      <pre><%= @message['body'] %></pre>
+    </div>
+
+    <div>
+      <small>sent <%= @current_date %></small>
+    </div>
+  </body>
+</html>
