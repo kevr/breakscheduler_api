@@ -6,7 +6,7 @@ class RepliesController < ApplicationController
     @reply = Reply.create!({
       body: params[:body],
       ticket: @ticket,
-      user: @current_user
+      email: @current_user.email
     })
     render json: @reply
   end
@@ -14,7 +14,7 @@ class RepliesController < ApplicationController
   def show
     @ticket = Ticket.find(params[:id])
 
-    if @ticket.user != @current_user and @current_type != "admin"
+    if @ticket.email != @current_user.email and @current_type != "admin"
       render json: {}, status: :not_found
       return
     end
@@ -24,21 +24,14 @@ class RepliesController < ApplicationController
   end
 
   def update
-    @ticket = Ticket.where(user: @current_user, id: params[:id])
-    if @ticket
-      @ticket = @ticket.first
-    end
+    @ticket = Ticket.where(email: @current_user.email, id: params[:id]).first
     @reply = @ticket.replies.find(params[:reply_id])
     @reply.update(body: params[:body])
     render json: @reply
   end
 
   def destroy
-    @ticket = Ticket.where(user: @current_user, id: params[:id])
-    if @ticket
-      @ticket = @ticket.first
-    end
-
+    @ticket = Ticket.where(email: @current_user.email, id: params[:id]).first
     @reply = @ticket.replies.find(params[:reply_id])
     @reply.delete
   end

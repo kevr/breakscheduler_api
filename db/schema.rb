@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_21_063903) do
+ActiveRecord::Schema.define(version: 2020_03_01_000234) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 2020_02_21_063903) do
     t.text "body", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email", null: false
     t.index ["ticket_id"], name: "index_replies_on_ticket_id"
     t.index ["user_type", "user_id"], name: "index_replies_on_user_type_and_user_id"
   end
@@ -97,6 +98,7 @@ ActiveRecord::Schema.define(version: 2020_02_21_063903) do
     t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "email", null: false
     t.index ["user_type", "user_id"], name: "index_tickets_on_user_type_and_user_id"
   end
 

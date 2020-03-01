@@ -12,7 +12,7 @@ RSpec.describe RepliesController, type: :controller do
       })
 
       @ticket = Ticket.create!({
-        user: @user,
+        email: @user.email,
         subject: "Test ticket",
         body: "Test content."
       })
@@ -85,7 +85,7 @@ RSpec.describe RepliesController, type: :controller do
 
       @reply = Reply.create!({
         ticket: @ticket,
-        user: @user,
+        email: @user.email,
         body: "A reply"
       })
 
@@ -97,13 +97,13 @@ RSpec.describe RepliesController, type: :controller do
       expect(response.code).to eq '200'
 
       @adminTicket = Ticket.create!({
-        user: @admin,
+        email: @admin.email,
         subject: "Admin ticket",
         body: "Body"
       })
 
       @adminReply = Reply.create!({
-        user: @admin,
+        email: @admin.email,
         body: "Reply",
         ticket: @adminTicket
       })

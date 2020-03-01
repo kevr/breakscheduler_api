@@ -2,13 +2,13 @@ class TicketsController < ApplicationController
   before_action :json_authenticated
 
   def index
-    @tickets = Ticket.where(user: @current_user)
+    @tickets = Ticket.where(email: @current_user.email)
     render json: @tickets
   end
 
   def create
     @ticket = Ticket.create!({
-      user: @current_user,
+      email: params[:email],
       subject: params[:subject],
       body: params[:body]
     })
@@ -17,7 +17,7 @@ class TicketsController < ApplicationController
 
   def update
     @ticket = Ticket.find(params[:id])
-    if @ticket.user != @current_user and @current_type != "admin"
+    if @ticket.email != @current_user.email and @current_type != "admin"
       render json: {}, status: :not_found
       return
     end
@@ -36,7 +36,7 @@ class TicketsController < ApplicationController
 
   def show
     @ticket = Ticket.find(params[:id])
-    if @ticket.user != @current_user and @current_type != "admin"
+    if @ticket.email != @current_user.email and @current_type != "admin"
       render json: {}, status: :not_found
       return
     end

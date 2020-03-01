@@ -13,12 +13,13 @@ RSpec.describe Ticket, type: :model do
     end
 
     it 'can be created' do
-      @ticket = @user.tickets.create!({
+      @ticket = Ticket.create!({
+        email: @user.email,
         subject: "Ticket subject",
         body: "Ticket body"
       })
 
-      expect(@user).to eq @ticket.user
+      expect(@ticket.email).to eq @user.email
       expect(@ticket.subject).to eq "Ticket subject"
       expect(@ticket.body).to eq "Ticket body"
       expect(@ticket.status).to eq "open"

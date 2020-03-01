@@ -11,7 +11,7 @@ RSpec.describe TicketsController, type: :controller do
       })
 
       @ticket = Ticket.create!({
-        user: @user,
+        email: @user.email,
         subject: "Test ticket",
         body: "Content of the test ticket."
       })
@@ -35,7 +35,7 @@ RSpec.describe TicketsController, type: :controller do
 
       data = ActiveSupport::JSON.decode(response.body)
       ticket = data[0]
-      expect(ticket["user"]).to eq @user.as_json
+      expect(ticket["email"]).to eq @user.email
       expect(ticket["subject"]).to eq "Test ticket"
       expect(ticket["body"]).to eq "Content of the test ticket."
     end
@@ -52,7 +52,7 @@ RSpec.describe TicketsController, type: :controller do
       expect(response.code).to eq '200'
 
       ticket = ActiveSupport::JSON.decode(response.body)
-      expect(ticket["user"]).to eq @user.as_json
+      expect(ticket["email"]).to eq @user.email
       expect(ticket["subject"]).to eq "Test ticket"
       expect(ticket["body"]).to eq "Content of the test ticket."
     end
@@ -72,7 +72,7 @@ RSpec.describe TicketsController, type: :controller do
       expect(response.code).to eq '200'
 
       ticket = ActiveSupport::JSON.decode(response.body)
-      expect(ticket["user"]).to eq @user.as_json
+      expect(ticket["email"]).to eq @user.email
       expect(ticket["subject"]).to eq "Updated Subject"
       expect(ticket["body"]).to eq "Updated body."
       expect(ticket["status"]).to eq "closed"
@@ -85,6 +85,7 @@ RSpec.describe TicketsController, type: :controller do
       request.headers.merge! headers
 
       post :create, params: {
+        email: @user.email,
         subject: "A New Ticket",
         body: "Man, oh man."
       }
@@ -100,7 +101,7 @@ RSpec.describe TicketsController, type: :controller do
       })
 
       @otherTicket = Ticket.create!({
-        user: @otherUser,
+        email: @otherUser.email,
         subject: "subject",
         body: "body"
       })
