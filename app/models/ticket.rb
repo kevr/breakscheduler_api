@@ -7,6 +7,14 @@ class Ticket < ApplicationRecord
     :closed     # 2
   ]
 
+  before_create :create_hook
+
+  def create_hook
+    if self.key == nil
+      self.key = SecureRandom.uuid
+    end
+  end
+
   def is_user
     user = nil
 

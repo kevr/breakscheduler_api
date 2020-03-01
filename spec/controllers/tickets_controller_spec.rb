@@ -123,5 +123,34 @@ RSpec.describe TicketsController, type: :controller do
       expect(response.code).to eq '404'
     end 
 
+    it 'guest ticket can be accessed via key' do
+      @guestTicket = Ticket.create!({
+        email: "random@guy.com",
+        subject: "Guest Subject",
+        body: "Guest body!"
+      })
+
+      get :show, params: {
+        id: @guestTicket.id,
+        key: @guestTicket.key
+      }
+      expect(response.code).to eq '200'
+
+    end
+
+    it 'invalid ticket key denies view' do
+      @guestTicket = Ticket.create!({
+        email: "random@guy.com",
+        subject: "Guest Subject",
+        body: "Guest body!"
+      })
+
+      get :show, params: {
+        id: @guestTicket.id,
+        key: "BLAH BLAH"
+      }
+      expect(response.code).to eq '401'
+    end
+
   end
 end

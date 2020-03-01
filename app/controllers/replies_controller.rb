@@ -14,7 +14,10 @@ class RepliesController < ApplicationController
   def show
     @ticket = Ticket.find(params[:id])
 
-    if @ticket.email != @current_user.email and @current_type != "admin"
+    logger.info "ticket email: #{@ticket.email}"
+    logger.info "current user email: #{@current_user.email}"
+
+    if @ticket.email != @current_user.email and @current_type == "user"
       render json: {}, status: :not_found
       return
     end

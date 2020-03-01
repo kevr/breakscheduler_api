@@ -115,11 +115,8 @@ RSpec.describe RepliesController, type: :controller do
       }
       expect(response.code).to eq '404'
 
-      token = JsonWebToken.encode(admin_id: @admin.id)
-      headers = {
-        "Authorization" => "Token #{token}"
-      }
-      request.headers.merge! headers
+      @token = JsonWebToken.encode(admin_id: @admin.id)
+      request.headers["Authorization"] = "Token #{@token}"
 
       # Authorized as admin
       get :show, params: {
