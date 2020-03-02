@@ -52,7 +52,12 @@ module UsersHelper
     if params[:key]
       # First, see if the given Authorization value is a Ticket key
       begin
-        ticket = Ticket.where(key: params[:key]).first
+        ticket = Ticket.where(key: params[:key])
+        if not ticket.exists?
+          raise ActiveRecord::RecordNotFound.new "Ticket with key not found: #{params[:key]}"
+        else
+          ticket = ticket.first
+        end
         logger.info "Matched ticket key: #{ticket.key}"
         user = GuestUser.new(email: ticket.email)
       rescue
@@ -86,6 +91,13 @@ module UsersHelper
     end
 
     return user
+  end
+
+  def set_token(request, token)
+    headers = {
+      "Authorization" => "Token #{token}"
+    }
+    request.headers.merge! headers
   end
 
 end

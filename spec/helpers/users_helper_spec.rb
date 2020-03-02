@@ -60,6 +60,17 @@ RSpec.describe UsersHelper, type: :helper do
       expect(user.instance_of? AdminUser).to eq true
     end
 
+    it 'user_type works' do
+      user = User.new
+      expect(user_type(user)).to eq "user"
+
+      admin = AdminUser.new
+      expect(user_type(admin)).to eq "admin"
+
+      guest = GuestUser.new(email: "some@guest.com")
+      expect(user_type(guest)).to eq "guest"
+    end
+
   end
 
 end

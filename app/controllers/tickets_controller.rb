@@ -44,7 +44,9 @@ class TicketsController < ApplicationController
     @ticket = Ticket.find(params[:id])
     is_admin = @current_type == "admin"
     if not is_admin and @ticket.email != @current_user.email
-      render json: {}, status: :not_found
+      render json: {
+        error: "You are not authorized to modify this ticket."
+      }, status: :unauthorized
       return
     end
 
@@ -67,7 +69,9 @@ class TicketsController < ApplicationController
     # If the user viewing this is not an admin _and_ the ticket
     # does not involve the user's current email, then reply with 404
     if not is_admin and not @ticket.involves(email: @current_user.email)
-      render json: {}, status: :not_found
+      render json: {
+        error: "You do not have authorization to view this ticket."
+      }, status: :unauthorized
       return
     end
 
