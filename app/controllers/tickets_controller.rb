@@ -1,8 +1,10 @@
+require 'set'
+
 class TicketsController < ApplicationController
   before_action :json_authenticated
 
   def index
-    @tickets = Ticket.where(email: @current_user.email)
+    @tickets = Ticket.where_involves(email: @current_user.email)
     render json: @tickets
   end
 
@@ -17,26 +19,31 @@ class TicketsController < ApplicationController
 
   def update
     @ticket = Ticket.find(params[:id])
-    if @ticket.email != @current_user.email and @current_type != "admin"
+    is_admin = @current_type == "admin"
+    if not is_admin and @ticket.email != @current_user.email
       render json: {}, status: :not_found
       return
     end
 
     if params[:subject]
-      @ticket.update(subject: params[:subject])
+      @ticket.update!(subject: params[:subject])
     end
     if params[:body]
-      @ticket.update(body: params[:body])
+      @ticket.update!(body: params[:body])
     end
     if params[:status]
-      @ticket.update(status: params[:status])
+      @ticket.update!(status: params[:status])
     end
+
     render json: @ticket
   end
 
   def show
     @ticket = Ticket.find(params[:id])
-    if @current_type == "user" and @ticket.email != @current_user.email
+    is_admin = @current_type == "admin"
+    # If the user viewing this is not an admin _and_ the ticket
+    # does not involve the user's current email, then reply with 404
+    if not is_admin and not @ticket.involves(email: @current_user.email)
       render json: {}, status: :not_found
       return
     end

@@ -10,10 +10,12 @@ class Reply < ApplicationRecord
       # Do nothing, user == nil
     end
 
-    begin
-      user = User.find(email: self.email)
-    rescue ActiveRecord::RecordNotFound
-      # Do nothing, user == nil
+    if user == nil
+      begin
+        user = User.find(email: self.email)
+      rescue ActiveRecord::RecordNotFound
+        # Do nothing, user == nil
+      end
     end
 
     return user != nil

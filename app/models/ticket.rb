@@ -1,3 +1,5 @@
+require 'set'
+
 class Ticket < ApplicationRecord
   has_many :replies, dependent: :delete_all
 
@@ -15,6 +17,28 @@ class Ticket < ApplicationRecord
     end
   end
 
+  # Returns a boolean indicating whether or not the given email has
+  # created the ticket or replied to the ticket
+  def involves(params)
+    if self.email == params[:email]
+      return true
+    end
+    involvement = Reply.where(ticket: self, email: params[:email])
+    return involvement.exists?
+  end
+
+  # Returns a list of all Ticket objects that involves the email
+  def self.where_involves(params)
+    tickets = Ticket.where(email: params[:email]).to_set
+    replies = Reply.where(email: params[:email])
+    replies.each do |reply|
+      if not tickets.include?(reply.ticket)
+        tickets.add(reply.ticket)
+      end
+    end
+    return tickets.to_a
+  end
+
   def is_user
     user = nil
 
@@ -24,12 +48,14 @@ class Ticket < ApplicationRecord
       # Do nothing, user == nil
     end
 
-    begin
-      user = User.find(email: self.email)
-    rescue ActiveRecord::RecordNotFound
-      # Do nothing, user == nil
+    if user == nil
+      begin
+        user = User.find(email: self.email)
+      rescue ActiveRecord::RecordNotFound
+        # Do nothing, user == nil
+      end
     end
-
+    
     return user != nil
   end
 

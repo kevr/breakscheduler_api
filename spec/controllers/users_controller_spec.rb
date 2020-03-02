@@ -119,6 +119,7 @@ RSpec.describe UsersController, type: :controller do
         'id' => @user.id,
         'name' => @user.name,
         'email' => @user.email,
+        'registered' => true,
         'reset_password_token' => nil,
         'type' => 'user'
       }

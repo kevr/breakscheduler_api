@@ -54,8 +54,8 @@ RSpec.describe Reply, type: :model do
 
     it 'Reply as_json matches as expected' do 
       reply = Reply.create!({
-        email: @user.email,
         ticket: @ticket,
+        email: @user.email,
         body: "A reply that should be deleted when it's ticket is."
       })
       
@@ -67,6 +67,18 @@ RSpec.describe Reply, type: :model do
 
       replyFound = @ticket.replies.find(reply.id)
       expect(replyFound.id).to eq reply.id
+    end
+
+    it 'assists matching a ticket to an email via reply involvement' do
+      reply = @ticket.replies.create!({
+        ticket: @ticket,
+        email: "random@email.com",
+        body: "Random body"
+      })
+
+      Rails.logger.info "Test Ticket: #{@ticket.as_json}"
+      results = Ticket.where_involves(email: "random@email.com")
+      expect(results).to eq [@ticket]
     end
 
   end

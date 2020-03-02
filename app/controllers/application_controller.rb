@@ -37,13 +37,8 @@ class ApplicationController < ActionController::Base
       begin
         ticket = Ticket.where(key: params[:key]).first
         logger.info "Matched ticket key: #{ticket.key}"
-        @current_user = {
-          user_id: nil,
-          email: ticket.email,
-          name: '',
-          registered: false,
-          type: "guest"
-        }
+        @current_user = User.new
+        @current_user.email = ticket.email
         @current_type = "guest"
       rescue
         @current_user = nil
