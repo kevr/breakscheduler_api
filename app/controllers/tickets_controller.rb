@@ -1,7 +1,10 @@
 require 'set'
 
 class TicketsController < ApplicationController
-  before_action :json_authenticated
+  include UsersHelper
+
+  before_action :probe_auth, only: [ :create ]
+  before_action :enforce_auth, except: [ :create ]
 
   def index
     @tickets = Ticket.where_involves(email: @current_user.email)
@@ -9,6 +12,24 @@ class TicketsController < ApplicationController
   end
 
   def create
+    if not @current_user.nil?
+      if params[:email].nil?
+        params[:email] = @current_user.email
+      end
+    end
+
+    # If the :email param belongs to a registered user
+    if user_exists(params[:email])
+      # If user is currently logged in and the user's email differs from
+      # what we were given, or the request is coming from an unknown
+      # visitor, return unauthorized
+      if @current_user.nil? or
+          (@current_user and @current_user.email != params[:email])
+        render json: {}, status: :unauthorized
+        return
+      end
+    end
+
     @ticket = Ticket.create!({
       email: params[:email],
       subject: params[:subject],

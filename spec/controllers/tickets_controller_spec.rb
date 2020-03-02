@@ -152,5 +152,30 @@ RSpec.describe TicketsController, type: :controller do
       expect(response.code).to eq '401'
     end
 
+    it 'create with registered email as guest returns unauthorized' do
+      post :create, params: {
+        email: @user.email,
+        subject: "Test subject",
+        body: "Test body"
+      }
+      expect(response.code).to eq '401'
+    end
+
+    it 'create when logged in allows email param to be omitted' do
+      headers = {
+        "Authorization" => "Token #{@token}"
+      }
+      request.headers.merge! headers
+
+      post :create, params: {
+        subject: "Test subject",
+        body: "Test body"
+      }
+      expect(response.code).to eq '200'
+
+      ticket = ActiveSupport::JSON.decode(response.body)
+      expect(ticket["email"]).to eq @user.email
+    end
+
   end
 end
