@@ -11,4 +11,55 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe UsersHelper, type: :helper do
+
+  context 'method' do
+  
+    it 'is_admin works' do
+      admin = AdminUser.create!({
+        email: "test@example.com",
+        password: "abcd1234",
+        password_confirmation: "abcd1234"
+      })
+      expect(is_admin(admin)).to eq true
+      expect(is_admin_email(admin.email)).to eq true
+
+      # Throw these in to cover our negative is_guest cases
+      expect(is_guest(admin)).to eq false
+      expect(is_guest_email(admin.email)).to eq false
+    end
+
+    it 'is_admin_email fails successfully' do
+      expect(is_admin_email("blah")).to eq false
+    end
+
+    it 'is_guest works' do
+      user = GuestUser.new(email: "guest@example.com")
+      expect(is_guest(user)).to eq true
+    end
+
+    it 'is_guest_email fails successfully' do
+      expect(is_guest_email("blah@example.com")).to eq true
+    end
+
+    it 'user_exists works' do
+      admin = AdminUser.create!({
+        email: "test@example.com",
+        password: "abcd1234",
+        password_confirmation: "abcd1234"
+      })
+      expect(user_exists(admin.email)).to eq true
+    end
+
+    it 'user_object works' do
+      admin = AdminUser.create!({
+        email: "test@example.com",
+        password: "abcd1234",
+        password_confirmation: "abcd1234"
+      })
+      user = user_object(admin.email)
+      expect(user.instance_of? AdminUser).to eq true
+    end
+
+  end
+
 end
