@@ -25,7 +25,9 @@ class TicketsController < ApplicationController
       # visitor, return unauthorized
       if @current_user.nil? or
           (@current_user and @current_user.email != params[:email])
-        render json: {}, status: :unauthorized
+        render json: {
+          error: "That email is reserved for a registered account."
+        }, status: :unauthorized
         return
       end
     end
