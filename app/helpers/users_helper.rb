@@ -32,4 +32,60 @@ module UsersHelper
     return user_object(email) != nil
   end
 
+  def user_type(user)
+    if user.instance_of?(AdminUser)
+      return "admin"
+    elsif user.instance_of?(GuestUser)
+      return "guest"
+    elsif user.instance_of?(User)
+      return "user"
+    end
+    return nil
+  end
+
+  def authenticate_user(request, params)
+    # Set these to null; this function will set it back to it's
+    # value in the event that the request is coming from a valid
+    # user.
+    user = nil
+
+    if params[:key]
+      # First, see if the given Authorization value is a Ticket key
+      begin
+        ticket = Ticket.where(key: params[:key]).first
+        logger.info "Matched ticket key: #{ticket.key}"
+        user = GuestUser.new(email: ticket.email)
+      rescue
+        user = nil
+      end
+    end
+
+    if user == nil
+      header = request.headers['Authorization']
+      header = header.split(' ').last if header
+      decoded = JsonWebToken.decode(header)
+      if not user and not decoded
+        raise JWT::DecodeError.new "Unable to decode header"
+      end
+    end
+
+    # If it isn't, see if it's a User
+    if user == nil
+      begin
+        user = User.find(decoded[:user_id])
+      rescue
+        user = nil
+      end
+    end
+
+    # Otherwise, see if it's an AdminUser. If we actually look to see
+    # if it's an admin and it's not, RecordNotFound will be raised signaling
+    # that @current_user ended up null
+    if user == nil
+      user = AdminUser.find(decoded[:admin_id])
+    end
+
+    return user
+  end
+
 end

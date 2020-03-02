@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include UsersHelper
+
   skip_before_action :verify_authenticity_token
 
   # Probe authorization keys provided. Populate @current_user if one was
@@ -14,10 +16,12 @@ class ApplicationController < ActionController::Base
   def enforce_auth
     _json_authenticated
   rescue ActiveRecord::RecordNotFound => e
+    logger.debug "_json_authenticated encountered RecordNotFound"
     render json: {
       error: "Invalid authorization token"
     }, status: :unauthorized
   rescue JWT::DecodeError => e
+    logger.debug "_json_authenticated encountered DecodeError"
     render json: {
       error: "Invalid authorization token"
     }, status: :unauthorized
@@ -40,51 +44,9 @@ class ApplicationController < ActionController::Base
   end
 
   def _json_authenticated
-    # Set these to null; this function will set it back to it's
-    # value in the event that the request is coming from a valid
-    # user.
-    @current_user = nil
-    @current_type = nil
-
-    if params[:key]
-      # First, see if the given Authorization value is a Ticket key
-      begin
-        ticket = Ticket.where(key: params[:key]).first
-        logger.info "Matched ticket key: #{ticket.key}"
-        @current_user = GuestUser.new(email: ticket.email)
-        @current_type = "guest"
-      rescue
-        @current_user = nil
-      end     
-    end
-
-    if @current_user == nil
-      header = request.headers['Authorization']
-      header = header.split(' ').last if header
-      @decoded = JsonWebToken.decode(header)
-      if not @current_user and not @decoded
-        raise JWT::DecodeError.new "Unable to decode header"
-      end
-    end
-
-    # If it isn't, see if it's a User
-    if @current_user == nil
-      begin
-        @current_user = User.find(@decoded[:user_id])
-        @current_type = "user"
-      rescue
-        @current_user = nil
-      end
-    end
-
-    # Otherwise, see if it's an AdminUser. If we actually look to see
-    # if it's an admin and it's not, RecordNotFound will be raised signaling
-    # that @current_user ended up null
-    if @current_user == nil
-      @current_user = AdminUser.find(@decoded[:admin_id])
-      @current_type = "admin"
-    end
-
-    @current_user
+    @current_user = authenticate_user(request, params)
+    @current_type = user_type(@current_user)
+    logger.debug "_json_authenticated resolved user type: #{@current_type}"
+    return @current_user
   end
 end
