@@ -205,6 +205,7 @@ RSpec.describe UsersController, type: :controller do
         'name' => '',
         'email' => @admin.email,
         'reset_password_token' => nil,
+        'registered' => true,
         'type' => 'admin'
       }
       expect(data).to eq expected

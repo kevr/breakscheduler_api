@@ -10,6 +10,7 @@ class AdminUser < ApplicationRecord
       name: self.name,
       email: self.email,
       reset_password_token: self.reset_password_token,
+      registered: self.id != nil,
       type: "admin"
     }
   end
