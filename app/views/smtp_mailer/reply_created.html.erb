@@ -1,0 +1,15 @@
+<html>
+  <body>
+    <div>
+      <p>Hello,</p>
+      <% if not is_guest_email(@email) %>
+        <p>A ticket (<%= @ticket.id %>) you are involved in has received a reply. <a target="_blank" href="<%= @referrer %>/help/support/tickets/<%= @ticket.id %>">View the ticket here</a>.</p>
+      <% else %>
+        <p>A ticket (<%= @ticket.id %>) you are involved in has received a reply. <a target="_blank" href="<%= @referrer %>/help/support/tickets/<%= @ticket.id %>?key=<%= @ticket.key %>">View the ticket here</a>.</p>
+      <% end %>
+
+      <pre><%= @reply.body %></pre>
+
+    </div>
+  </body>
+</html>

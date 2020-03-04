@@ -1,0 +1,20 @@
+<html>
+  <body>
+    <div>
+      <p>Hello,</p>
+      <% if not is_guest_email(@email) %>
+        <p>A ticket has been created for you, <%= @ticket.email %>, within our system. <a target="_blank" href="<%= @referrer %>/help/support/tickets/<%= @ticket.id %>">View the ticket here</a>.</p>
+      <% else %>
+        <p>A ticket has been created for you, <%= @ticket.email %>, within our system. <a target="_blank" href="<%= @referrer %>/help/support/tickets/<%= @ticket.id %>?key=<%= @ticket.key %>">View the ticket here</a>.</p>
+      <% end %>
+
+      <h6><%= @ticket.subject %></h6>
+      <pre><%= @ticket.body %></pre>
+
+    </div>
+
+    <div>
+      <small>sent <%= @current_date %></small>
+    </div>
+  </body>
+</html>

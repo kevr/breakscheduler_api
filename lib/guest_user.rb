@@ -3,10 +3,16 @@
 #
 class GuestUser
 
+  attr_accessor :id
   attr_accessor :name
   attr_accessor :email
 
   def initialize(params = {})
+    self.id = nil
+    if params.include?(:id)
+      self.id = params[:id]
+    end
+
     self.name = ''
     if params.include?(:name)
       self.name = params[:name]

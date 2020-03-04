@@ -27,7 +27,20 @@ class Ticket < ApplicationRecord
     return involvement.exists?
   end
 
-  # Returns a list of all Ticket objects that involves the email
+  # Returns a list of emails involved in this ticket. Useful for
+  # notifying all users (or emails) involved in an email.
+  def involved_emails
+    emails = Set.new([self.email])
+    self.replies.each do |reply|
+      if not emails.include?(reply.email)
+        emails.add(reply.email)
+      end
+    end
+    return emails.to_a
+  end
+
+  # Returns a list of all Ticket objects that involves the given email.
+  # This is a static method.
   def self.where_involves(params)
     tickets = Ticket.where(email: params[:email]).to_set
     replies = Reply.where(email: params[:email])

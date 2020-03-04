@@ -18,8 +18,10 @@ class TicketsController < ApplicationController
       end
     end
 
+    authenticated = user_exists(params[:email])
+
     # If the :email param belongs to a registered user
-    if user_exists(params[:email])
+    if authenticated
       # If user is currently logged in and the user's email differs from
       # what we were given, or the request is coming from an unknown
       # visitor, return unauthorized
@@ -37,6 +39,21 @@ class TicketsController < ApplicationController
       subject: params[:subject],
       body: params[:body]
     })
+
+    # If the ticket was created for a guest email, send our contacted
+    # email notification to the guest user.
+    if is_guest_email(params[:email])
+      SmtpMailer.contacted(
+        email: @ticket.email
+      ).deliver_later
+    end
+
+    SmtpMailer.ticket_created(
+      email: @ticket.email,
+      ticket: @ticket,
+      referrer: @http_origin
+    ).deliver_later
+
     render json: @ticket
   end
 
@@ -66,9 +83,12 @@ class TicketsController < ApplicationController
   def show
     @ticket = Ticket.find(params[:id])
     is_admin = @current_type == "admin"
-    # If the user viewing this is not an admin _and_ the ticket
-    # does not involve the user's current email, then reply with 404
-    if not is_admin and not @ticket.involves(email: @current_user.email)
+
+    # If the viewer is not an admin and the ticket does not involve them,
+    # or the current user is an authenticated guest and the id mismatches
+    # the ticket id, return unauthorized.
+    if (not is_admin and not @ticket.involves(email: @current_user.email)) or
+        (is_guest(@current_user) and @current_user.id != @ticket.id)
       render json: {
         error: "You do not have authorization to view this ticket."
       }, status: :unauthorized

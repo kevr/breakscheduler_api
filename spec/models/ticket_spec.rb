@@ -29,5 +29,21 @@ RSpec.describe Ticket, type: :model do
       expect(@ticket.status).to eq "closed"
     end
 
+    it 'involved_emails returns all emails involved in a ticket' do
+      @ticket = Ticket.create!({
+        email: @user.email,
+        subject: "Ticket subject",
+        body: "Ticket body"
+      })
+
+      @reply = Reply.create!({
+        ticket: @ticket,
+        email: "guest@email.com",
+        body: "Guest body"
+      })
+
+      expect(@ticket.involved_emails).to eq [@user.email, "guest@email.com"]
+    end
+
   end
 end

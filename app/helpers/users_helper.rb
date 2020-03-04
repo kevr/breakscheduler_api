@@ -49,17 +49,18 @@ module UsersHelper
     # user.
     user = nil
 
-    if params[:key]
+    if not params[:key].nil?
       # First, see if the given Authorization value is a Ticket key
       begin
-        ticket = Ticket.where(key: params[:key])
-        if not ticket.exists?
+        tickets = Ticket.where(key: params[:key])
+        if not tickets.exists?
           raise ActiveRecord::RecordNotFound.new "Ticket with key not found: #{params[:key]}"
-        else
-          ticket = ticket.first
         end
-        logger.info "Matched ticket key: #{ticket.key}"
-        user = GuestUser.new(email: ticket.email)
+        logger.info "Testing key '#{params[:key]}' against '#{tickets.first.key}'"
+        logger.info "Matched ticket key: #{tickets.first.key}"
+        # Create a GuestUser with a specific id and email related to
+        # the ticket being viewed
+        user = GuestUser.new(id: tickets.first.id, email: tickets.first.email)
       rescue
         user = nil
       end

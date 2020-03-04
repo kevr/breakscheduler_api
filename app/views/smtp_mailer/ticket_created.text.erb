@@ -1,0 +1,16 @@
+Hello,
+
+A ticket has been created for you, <%= @ticket.email %>, within our system.
+
+You can access the ticket through the following link:
+<% if not is_guest_email(@email) %>
+<%= @referrer %>/help/support/tickets/<%= @ticket.id %>
+<% else %>
+<%= @referrer %>/help/support/tickets/<%= @ticket.id %>?key=<%= @ticket.key %>
+<% end %>
+
+Subject: <%= @ticket.subject %>
+Body:
+
+<%= @ticket.body %>
+

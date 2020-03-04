@@ -2,6 +2,11 @@ class ApplicationController < ActionController::Base
   include UsersHelper
 
   skip_before_action :verify_authenticity_token
+  before_action :probe_headers
+
+  def probe_headers
+    @http_origin = request.headers['Origin']
+  end
 
   # Probe authorization keys provided. Populate @current_user if one was
   # found, otherwise leave it nil.
