@@ -8,6 +8,18 @@ class RepliesController < ApplicationController
       ticket: @ticket,
       email: @current_user.email
     })
+
+    # Notify everybody involved in the ticket
+    emails = @ticket.involved_emails
+    emails.each do |email|
+      SmtpMailer.reply_created(
+        ticket: @ticket,
+        reply: @reply,
+        referrer: @http_origin,
+        email: email
+      ).deliver_later
+    end
+
     render json: @reply
   end
 

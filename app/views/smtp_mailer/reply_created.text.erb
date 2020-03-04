@@ -1,0 +1,10 @@
+Hello <%= @email %>,
+
+A ticket (<%= @ticket.id %>) you are involved in has received a reply.
+
+View the ticket at the following url: <%= @referrer %>/help/support/tickets/<%= @ticket.id %><%= is_guest_email(@email) ? '?key=' + @ticket.key : '' %>
+
+Body:
+
+<%= @reply.body %>
+

@@ -20,7 +20,7 @@ RSpec.describe SmtpMailer, type: :mailer do
   end
 
   context 'ticket_created' do
-    it 'ticket_created by User runs without issue' do
+    it 'by User runs without issue' do
       ticket = Ticket.create!({
         email: @user.email,
         subject: "Test subject",
@@ -45,7 +45,7 @@ RSpec.describe SmtpMailer, type: :mailer do
       ).to eq false
     end
 
-    it 'ticket_created by guest runs without issue' do
+    it 'by guest runs without issue' do
       ticket = Ticket.create!({
         email: "guest@email.com",
         subject: "Guest subject",
@@ -64,7 +64,7 @@ RSpec.describe SmtpMailer, type: :mailer do
       ).to eq true
     end
 
-    it 'ticket_created with no referrer raises ArgumentError' do
+    it 'with no referrer raises ArgumentError' do
       ticket = Ticket.create!({
         email: "guest@email.com",
         subject: "Guest subject",
@@ -78,7 +78,7 @@ RSpec.describe SmtpMailer, type: :mailer do
       }.to raise_error SmtpMailer::ArgumentError
     end
 
-    it 'ticket_created with no ticket or bad ticket raises ArgumentError' do
+    it 'with no ticket or bad ticket raises ArgumentError' do
       expect {
         SmtpMailer.ticket_created(
           referrer: "http://localhost:3000"
