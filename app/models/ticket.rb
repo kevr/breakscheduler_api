@@ -3,6 +3,9 @@ require 'set'
 class Ticket < ApplicationRecord
   has_many :replies, dependent: :delete_all
 
+  # Undefine the :open method before creating our :open enum
+  class << self; undef_method :open; end
+
   enum status: [
     :open,      # 0
     :escalated, # 1
