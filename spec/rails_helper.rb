@@ -5,6 +5,7 @@ SimpleCov.start do
   add_filter "app/admin/users.rb"
   add_filter "app/admin/admin_users.rb"
   add_filter "app/admin/dashboard.rb"
+  add_filter "app/admin/tickets.rb"
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
