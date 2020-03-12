@@ -4,6 +4,14 @@ class AdminUser < ApplicationRecord
   devise :database_authenticatable, 
          :recoverable, :rememberable, :validatable
 
+  validate :verify_unique_email
+
+  def verify_unique_email
+    if User.exists?(email: self.email)
+      errors.add :email, "has already been taken"
+    end
+  end
+
   def as_json(options = {})
     {
       id: self.id,
