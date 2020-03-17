@@ -33,7 +33,8 @@ class GuestUser
       "id" => nil,
       "name" => self.name,
       "email" => self.email,
-      "registered" => false
+      "registered" => false,
+      "type" => "guest"
     }
   end
 

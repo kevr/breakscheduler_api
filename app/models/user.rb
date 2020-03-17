@@ -22,7 +22,7 @@ class User < ApplicationRecord
       "id" => self.id,
       "name" => self.name,
       "email" => self.email,
-      "registered" => self.id != nil,
+      "registered" => true,
       "reset_password_token" => self.reset_password_token,
       "type" => self.user_type
     }
