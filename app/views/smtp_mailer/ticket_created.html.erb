@@ -8,13 +8,9 @@
         <p>A ticket has been created for you, <%= @ticket.email %>, within our system. <a target="_blank" href="<%= @referrer %>/help/support/tickets/<%= @ticket.id %>?key=<%= @ticket.key %>">View the ticket here</a>.</p>
       <% end %>
 
-      <h6><%= @ticket.subject %></h6>
+      <h3>Subject: <%= @ticket.subject %></h3>
       <pre><%= @ticket.body %></pre>
 
-    </div>
-
-    <div>
-      <small>sent <%= @current_date %></small>
     </div>
   </body>
 </html>
