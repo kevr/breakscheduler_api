@@ -7,7 +7,11 @@ class TicketsController < ApplicationController
   before_action :enforce_auth, except: [ :create ]
 
   def index
-    @tickets = Ticket.where_involves(email: @current_user.email)
+    if @current_type == "admin"
+      @tickets = Ticket.all
+    else
+      @tickets = Ticket.where_involves(email: @current_user.email)
+    end
     render json: @tickets
   end
 
