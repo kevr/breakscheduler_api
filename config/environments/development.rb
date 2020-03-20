@@ -41,7 +41,19 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Use :test delivery_method with action_mailer
-  config.action_mailer.delivery_method = :test
+  if ENV["gmail_username"].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: "smtp.gmail.com",
+      port: 465,
+      user_name: ENV['gmail_username'],
+      password: ENV['gmail_password'],
+      authentication: "plain",
+      tls: true
+    }
+  else
+    config.action_mailer.delivery_method = :test
+  end
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
