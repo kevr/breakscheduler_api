@@ -96,7 +96,8 @@ module UsersHelper
 
   def set_token(request, token)
     headers = {
-      "Authorization" => "Token #{token}"
+      "Authorization" => "Token #{token}",
+      "Origin" => "http://example.com"
     }
     request.headers.merge! headers
   end
