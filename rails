@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# .railsrc should contain gmail_username and gmail_password
+# environment variables.
+#
+# Example:
+# gmail_username='blah@gmail.com'
+# gmail_password='password'
+#
+source ./.railsrc
+
+# Export gmail_username/gmail_password
+export gmail_username
+export gmail_password
+echo "using gmail_username: '$gmail_username'"
+
+# Call external rails
+rails "$@"
+
