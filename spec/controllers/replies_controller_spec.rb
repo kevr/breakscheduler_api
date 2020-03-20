@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe RepliesController, type: :controller do
+  include UsersHelper
+  include JsonHelper
 
   describe 'RepliesController' do
     before do
@@ -40,6 +42,28 @@ RSpec.describe RepliesController, type: :controller do
       receivedReply = ActiveSupport::JSON.decode(response.body)
 
       expect(receivedReply).to eq reply
+    end
+
+    it 'Reply create as other user generates email' do
+
+      # Create an admin user
+      @admin = AdminUser.create!({
+        email: "test-admin@example.com",
+        password: "abcd1234",
+        password_confirmation: "abcd1234"
+      })
+      @admin_token = JsonWebToken.encode(admin_id: @admin.id)
+
+      # As the @admin user, create a reply to @ticket, which is
+      # owned by @user. This will trigger an email notification
+      # to @user's email.
+      set_token(request, @admin_token)
+      post :create, params: {
+        email: @admin.email,
+        id: @ticket.id,
+        body: "Reply body"
+      }
+      expect(response.code).to eq '200'
     end
 
     it 'Reply update succeeds' do

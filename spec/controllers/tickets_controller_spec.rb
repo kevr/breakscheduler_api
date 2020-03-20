@@ -59,6 +59,31 @@ RSpec.describe TicketsController, type: :controller do
       ]
     end
 
+    # admin ticket index returns all tickets
+    it 'admin ticket index returns all tickets' do
+      ticket = Ticket.create!({
+        email: @user.email,
+        subject: "Test subject",
+        body: "Test body"
+      })
+
+      other_ticket = Ticket.create!({
+        email: "random@email.com",
+        subject: "Other subject",
+        body: "Other body"
+      })
+
+      set_token(request, @admin_token)
+      get :index
+      expect(response.code).to eq '200'
+
+      data = decode(response.body)
+      expect(data.length).to eq 2
+    end
+
+    it 'ticket reply as other user involved generates email' do
+    end
+
     it 'unauthorized show replies with 401' do
       get :show, params: {
         id: 1
