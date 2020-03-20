@@ -2,7 +2,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   logger = ActiveSupport::Logger.new(STDOUT)
-  config.logger = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = ActiveSupport::Logger.new("log/#{Rails.env}.log")
 
   config.log_level = :info
 

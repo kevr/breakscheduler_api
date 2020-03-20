@@ -6,6 +6,11 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  logger = ActiveSupport::Logger.new(STDOUT)
+  config.logger = logger
+
+  config.log_level = :debug
+
   config.cache_classes = false
 
   config.assets.compile = true

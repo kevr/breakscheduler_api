@@ -1,7 +1,9 @@
 
 Rails.application.configure do
   logger = ActiveSupport::Logger.new(STDOUT)
-  config.logger = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = logger
+
+  config.log_level = :debug
 
   # Settings specified here will take precedence over those in config/application.rb.
 
