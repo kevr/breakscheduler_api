@@ -18,7 +18,7 @@ class RepliesController < ApplicationController
           reply: @reply,
           referrer: @http_origin,
           email: email
-        ).deliver
+        ).deliver_later
       end
     end
 
