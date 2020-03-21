@@ -49,14 +49,14 @@ class TicketsController < ApplicationController
     if is_guest_email(params[:email])
       SmtpMailer.contacted(
         email: @ticket.email
-      ).deliver
+      ).deliver_later
     end
 
     SmtpMailer.ticket_created(
       email: @ticket.email,
       ticket: @ticket,
       referrer: @http_origin
-    ).deliver
+    ).deliver_later
 
     render json: @ticket
   end
