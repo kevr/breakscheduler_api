@@ -53,8 +53,10 @@ Rails.application.configure do
       authentication: "plain",
       enable_starttls_auto: true
     }
+    config.active_job.queue_adapter = :async
   else
     config.action_mailer.delivery_method = :test
+    config.active_job.queue_adapter = :test
   end
 
   # Print deprecation notices to the Rails logger.
