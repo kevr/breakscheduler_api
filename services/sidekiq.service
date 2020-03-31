@@ -1,0 +1,17 @@
+[Unit]
+Description=Simple Nginx HTTP Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=www
+Group=www
+
+EnvironmentFile=/home/www/breakscheduler_api/.railsrc
+Type=simple
+WorkingDirectory=/home/www/breakscheduler_api
+ExecStart=/bin/bash -lc 'sidekiq -e production -C /home/www/breakscheduler_api/config/sidekiq.yml'
+ExecStop=/usr/bin/killall -9 sidekiq
+
+[Install]
+WantedBy=multi-user.target

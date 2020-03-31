@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple Nginx HTTP Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+EnvironmentFile=/home/www/breakscheduler_api/.railsrc
+Type=forking
+ExecStart=/opt/nginx/sbin/nginx
+ExecStop=/usr/bin/killall -9 nginx
+
+[Install]
+WantedBy=multi-user.target
