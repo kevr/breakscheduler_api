@@ -4,13 +4,13 @@ REMOTE_USER="www"
 REMOTE_PATH="/home/www/breakscheduler_api"
 
 sshcmd() {
-    ssh ${REMOTE_USER}@${REMOTE_HOST} "$@"
+    ssh -t ${REMOTE_USER}@${REMOTE_HOST} "$@"
 }
 
 sshcmd "cd $REMOTE_PATH && git pull origin master"
 
 if [ "$1" == "--update" ]; then
-    sshcmd "cd $REMOTE_PATH && bundle install"
-    sshcmd "cd $REMOTE_PATH && yarn install --check-files"
+    sshcmd "cd $REMOTE_PATH && . /home/www/.rvm/scripts/rvm && bundle install"
+    sshcmd "cd $REMOTE_PATH && . /home/www/.nvm/nvm.sh && yarn install --check-files"
 fi
 
