@@ -64,7 +64,7 @@ Finally, we'll install nginx via compilation through passenger.
 
     # Create nginx directory where we'll install
     $ sudo mkdir -p /opt/nginx
-    $ sudo chown www-data /opt/nginx
+    $ sudo chown www /opt/nginx
 
     $ passenger-install-nginx-module
 
@@ -76,9 +76,9 @@ Follow through the prompts and write out to `/opt/nginx`. After, you may want to
 
     [Service]
     Type=forking
-    User=www-data
-    Group=www-data
-    EnvironmentFile=/var/www/breakscheduler_api/.railsrc
+    User=www
+    Group=www
+    EnvironmentFile=/home/www/breakscheduler_api/.railsrc
     ExecStart=/opt/nginx/sbin/nginx
     ExecStop=/usr/bin/killall -9 nginx
 
@@ -93,10 +93,10 @@ For email scheduling, we use Sidekiq, which requires `Redis`. On Debian, run `su
 
     [Service]
     Type=simple
-    User=www-data
-    Group=www-data
-    WorkingDirectory=/var/www/breakscheduler_api
-    ExecStart=/bin/bash -lc './sidekiq -e production -C config/sidekiq.yml'
+    User=www
+    Group=www
+    WorkingDirectory=/home/www/breakscheduler_api
+    ExecStart=/bin/bash -lc 'sidekiq -e production -C config/sidekiq.yml'
     
     [Install]
     WantedBy=multi-user.target
