@@ -6,34 +6,57 @@ This project contains source of a back-end API server that primarily stores pers
 
 ## Deployment
 
-First, configure RVM under your web process user `www-data`.
+To deploy under production, we have a various number of dependencies.
+
+* RVM
+    * **gems**: bundle, bundler
+* NVM
+    * **packages**: yarn
+* Redis
+
+#### Setup a webhost user
+
+To host this project in production under nginx, we require a user with read and write access to it's own home directory, as well as an nginx install destination. Login to your server as root, and add a user called (for the purposes of this README: `www`).
+
+    # useradd -s /bin/bash -m www
+
+#### Give webhost user sudo capability for setup
+
+**NOTE**: This should be reversed after initial project deployment is complete.
+
+    # gpasswd -a www sudo
+
+#### Configure RVM as `www`
 
     $ rvm install 2.5.5
     $ rvm --default use 2.5.5
-    $ gem install bundle
 
-    $ cd breakscheduler_api
+#### Install RVM Gems
+
+    $ gem install bundle
     $ bundle install
 
-Additionally, configure NVM.
+#### Configure NVM as `www`
 
     $ nvm install 10
     $ nvm use 10
-    $ npm install -g yarn
 
-    $ cd breakscheduler_api
+#### Install Required NVM Packages
+
+    $ npm install -g yarn
     $ yarn install
 
-Configure `.railsrc` with some required environment variables.
+#### Configure `.railsrc` with some required environment variables.
 
-    # .railsrc
+    $ cat .railsrc
     gmail_username='notification@email.com'
     gmail_password='password'
     SECRET_KEY_BASE='absolutelySecretBase'
 
+#### Configure Project
+
 Alright. That's all the project configuration required to run it. Now, migrate the database and seed the example admin user.
 
-    $ cd breakscheduler_api
     $ RAILS_ENV=production ./rails db:migrate
     $ RAILS_ENV=production ./rails db:seed
 
@@ -43,10 +66,9 @@ Finally, we'll install nginx via compilation through passenger.
     $ sudo mkdir -p /opt/nginx
     $ sudo chown www-data /opt/nginx
 
-    $ cd breakscheduler_api
     $ passenger-install-nginx-module
 
-Follow through the prompts and write out to `/opt/nginx`.
+Follow through the prompts and write out to `/opt/nginx`. After, you may want to setup some systemd services to run `nginx` and/or `sidekiq` on boot. Following are some examples of systemd services that can be used for this purpose (see `./services`).
 
     # /etc/systemd/systemd/nginx.service
     [Unit]
@@ -63,7 +85,7 @@ Follow through the prompts and write out to `/opt/nginx`.
     [Install]
     WantedBy=multi-user.target
 
-Now, the frontend website should be accessible via passenger with this nginx service. For email scheduling, we use Sidekiq, which requires `Redis`. On Debian, run `sudo apt-get install redis`.
+For email scheduling, we use Sidekiq, which requires `Redis`. On Debian, run `sudo apt-get install redis`.
 
     # /etc/systemd/system/sidekiq.service
     [Unit]
