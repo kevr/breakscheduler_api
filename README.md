@@ -6,16 +6,78 @@ This project contains source of a back-end API server that primarily stores pers
 
 ## Deployment
 
-In production, we use Sidekiq for email scheduling, which requires Redis. A simple systemd service can be used to activate sidekiq. On Debian, `sudo apt-get install redis`.
+First, configure RVM under your web process user `www-data`.
+
+    $ rvm install 2.5.5
+    $ rvm --default use 2.5.5
+    $ gem install bundle
+
+    $ cd breakscheduler_api
+    $ bundle install
+
+Additionally, configure NVM.
+
+    $ nvm install 10
+    $ nvm use 10
+    $ npm install -g yarn
+
+    $ cd breakscheduler_api
+    $ yarn install
+
+Configure `.railsrc` with some required environment variables.
+
+    # .railsrc
+    gmail_username='notification@email.com'
+    gmail_password='password'
+    SECRET_KEY_BASE='absolutelySecretBase'
+
+Alright. That's all the project configuration required to run it. Now, migrate the database and seed the example admin user.
+
+    $ cd breakscheduler_api
+    $ RAILS_ENV=production ./rails db:migrate
+    $ RAILS_ENV=production ./rails db:seed
+
+Finally, we'll install nginx via compilation through passenger.
+
+    # Create nginx directory where we'll install
+    $ sudo mkdir -p /opt/nginx
+    $ sudo chown www-data /opt/nginx
+
+    $ cd breakscheduler_api
+    $ passenger-install-nginx-module
+
+Follow through the prompts and write out to `/opt/nginx`.
+
+    # /etc/systemd/systemd/nginx.service
+    [Unit]
+    Description=Simple nginx server compiled with RVM passenger
+
+    [Service]
+    Type=forking
+    User=www-data
+    Group=www-data
+    EnvironmentFile=/var/www/breakscheduler_api/.railsrc
+    ExecStart=/opt/nginx/sbin/nginx
+    ExecStop=/usr/bin/killall -9 nginx
+
+    [Install]
+    WantedBy=multi-user.target
+
+Now, the frontend website should be accessible via passenger with this nginx service. For email scheduling, we use Sidekiq, which requires `Redis`. On Debian, run `sudo apt-get install redis`.
 
     # /etc/systemd/system/sidekiq.service
+    [Unit]
+    Description=Sidekiq scheduler service
+
     [Service]
-    Type=exec
+    Type=simple
     User=www-data
     Group=www-data
     WorkingDirectory=/var/www/breakscheduler_api
     ExecStart=/bin/bash -lc './sidekiq -e production -C config/sidekiq.yml'
-    ...
+    
+    [Install]
+    WantedBy=multi-user.target
 
 ## API Authorization
 
@@ -40,3 +102,4 @@ This project takes advantage of the [activeadmin](https://github.com/activeadmin
     Default Login generated using `rails generate db:seed`
     Username: admin@example.com
     Password: password
+    
