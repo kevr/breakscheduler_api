@@ -12,6 +12,7 @@ source ./.railsrc
 # Export gmail_username/gmail_password
 export gmail_username
 export gmail_password
+export SECRET_KEY_BASE
 echo "using gmail_username: '$gmail_username'"
 
 # Call external rails

@@ -3,6 +3,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '~> 2.5.5'
 
+gem 'passenger'
+
 gem 'sidekiq'
 
 gem 'rack', '>= 2.0.8'
