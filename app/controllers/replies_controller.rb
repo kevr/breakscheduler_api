@@ -41,14 +41,14 @@ class RepliesController < ApplicationController
   end
 
   def update
-    @ticket = Ticket.where(email: @current_user.email, id: params[:id]).first
+    @ticket = Ticket.find(params[:id])
     @reply = @ticket.replies.find(params[:reply_id])
     @reply.update(body: params[:body])
     render json: @reply
   end
 
   def destroy
-    @ticket = Ticket.where(email: @current_user.email, id: params[:id]).first
+    @ticket = Ticket.find(params[:id])
     @reply = @ticket.replies.find(params[:reply_id])
     @reply.delete
   end
